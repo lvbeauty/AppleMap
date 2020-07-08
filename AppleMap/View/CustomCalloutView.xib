@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="2X1-Ih-VbZ" customClass="CustomCalloutView" customModule="AppleMap" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="88"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="107 Coffee Dessert" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyF-it-qOq">
+                    <rect key="frame" x="8" y="8" width="149" height="29"/>
+                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="18"/>
+                    <color key="textColor" red="0.01536292172" green="0.075540496129999996" blue="0.659601047" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, this is Tina's cafe." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdp-yZ-DQo">
+                    <rect key="frame" x="8" y="37" width="190.33333333333334" height="22"/>
+                    <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="17"/>
+                    <color key="textColor" red="1" green="0.32486157100000002" blue="0.01796174482" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="house" translatesAutoresizingMaskIntoConstraints="NO" id="zPF-dr-eS8">
+                    <rect key="frame" x="220" y="8" width="72" height="72"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="zPF-dr-eS8" secondAttribute="height" multiplier="1:1" id="v1m-FO-ggb"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ES3-1x-rSO">
+                    <rect key="frame" x="8" y="59" width="100" height="21"/>
+                    <color key="backgroundColor" red="1" green="0.30231204909999998" blue="0.46591637130000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="t5E-8V-ysO"/>
+                    </constraints>
+                    <state key="normal" title="Coordinate">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="coordinateButtonTapped:" destination="2X1-Ih-VbZ" eventType="touchUpInside" id="l0b-eV-Cje"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ge0-Rn-gpw">
+                    <rect key="frame" x="116" y="59" width="100" height="21"/>
+                    <color key="backgroundColor" red="1" green="0.30231204909999998" blue="0.46591637130000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="oI7-7k-gg4"/>
+                    </constraints>
+                    <state key="normal" title="Address">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="addressButtonTapped:" destination="2X1-Ih-VbZ" eventType="touchUpInside" id="vch-cV-jGt"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="0.71764705880000002" blue="0.64172426890000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="zPF-dr-eS8" firstAttribute="top" secondItem="2X1-Ih-VbZ" secondAttribute="top" constant="8" id="9ei-Bt-oL0"/>
+                <constraint firstItem="ge0-Rn-gpw" firstAttribute="leading" secondItem="ES3-1x-rSO" secondAttribute="trailing" constant="8" id="CSq-Rg-OEh"/>
+                <constraint firstItem="WyF-it-qOq" firstAttribute="top" secondItem="2X1-Ih-VbZ" secondAttribute="top" constant="8" id="F6c-86-cit"/>
+                <constraint firstAttribute="trailing" secondItem="zPF-dr-eS8" secondAttribute="trailing" constant="8" id="IWt-yO-cjz"/>
+                <constraint firstItem="WyF-it-qOq" firstAttribute="leading" secondItem="2X1-Ih-VbZ" secondAttribute="leading" constant="8" id="KSt-e1-GLv"/>
+                <constraint firstItem="pdp-yZ-DQo" firstAttribute="leading" secondItem="2X1-Ih-VbZ" secondAttribute="leading" constant="8" id="Kmj-BU-mxW"/>
+                <constraint firstItem="ge0-Rn-gpw" firstAttribute="height" secondItem="ES3-1x-rSO" secondAttribute="height" id="Prr-Wj-xo8"/>
+                <constraint firstItem="ge0-Rn-gpw" firstAttribute="centerY" secondItem="ES3-1x-rSO" secondAttribute="centerY" id="Uhm-Rk-28K"/>
+                <constraint firstItem="pdp-yZ-DQo" firstAttribute="top" secondItem="WyF-it-qOq" secondAttribute="bottom" id="XaT-hx-aRu"/>
+                <constraint firstItem="ES3-1x-rSO" firstAttribute="top" secondItem="pdp-yZ-DQo" secondAttribute="bottom" id="ZQI-Zw-lt2"/>
+                <constraint firstAttribute="bottom" secondItem="ES3-1x-rSO" secondAttribute="bottom" constant="8" id="l9Y-8f-Ziz"/>
+                <constraint firstAttribute="bottom" secondItem="zPF-dr-eS8" secondAttribute="bottom" constant="8" id="uPW-TG-hB2"/>
+                <constraint firstItem="ES3-1x-rSO" firstAttribute="leading" secondItem="2X1-Ih-VbZ" secondAttribute="leading" constant="8" id="yCe-rh-Lg6"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="addressButton" destination="ge0-Rn-gpw" id="D8Y-Ya-Tl8"/>
+                <outlet property="coordinateButton" destination="ES3-1x-rSO" id="VoO-jK-jDn"/>
+                <outlet property="myImageView" destination="zPF-dr-eS8" id="rsg-uS-96m"/>
+                <outlet property="subtitleLabel" destination="pdp-yZ-DQo" id="lqc-fM-bOm"/>
+                <outlet property="titleLabel" destination="WyF-it-qOq" id="CHW-LM-mdr"/>
+            </connections>
+            <point key="canvasLocation" x="-439.13043478260875" y="28.532608695652176"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="house" width="256" height="213"/>
+    </resources>
+</document>
