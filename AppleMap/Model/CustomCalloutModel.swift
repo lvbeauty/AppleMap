@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import CoreLocation
 
 class CustomCalloutModel: CalloutViewModel {
     var title: String
     var subtitle: String
     var image: UIImage
+    var coordinate: CLLocationCoordinate2D?
+    var address: String?
     
-    init(title: String, subtitle: String, image: UIImage) {
+    init(title: String, subtitle: String, image: UIImage, at coordinate: CLLocationCoordinate2D?, address: String?) {
         self.title = title
         self.subtitle = subtitle
         self.image = image
+        self.coordinate = coordinate
+        self.address = address
     }
 }

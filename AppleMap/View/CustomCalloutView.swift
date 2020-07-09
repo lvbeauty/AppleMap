@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class CustomCalloutView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
@@ -16,13 +17,15 @@ class CustomCalloutView: UIView {
     @IBOutlet weak var addressButton: UIButton!
     
     var delegate: CustomCalloutViewModelDelegate?
+    var coordinate: CLLocationCoordinate2D?
+    var address: String?
     
     @IBAction func coordinateButtonTapped(_ sender: UIButton) {
-        delegate?.detailbuttonTapped()
+        delegate?.detailbuttonTapped(address)
     }
     
     @IBAction func addressButtonTapped(_ sender: Any) {
-        delegate?.addressButtonTapped()
+        delegate?.addressButtonTapped(title: titleLabel.text!, coordinate)
     }
     
     deinit {
@@ -37,5 +40,7 @@ extension CustomCalloutView: CalloutViewPlus {
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
         myImageView.image = viewModel.image
+        coordinate = viewModel.coordinate
+        address = viewModel.address
     }
 }

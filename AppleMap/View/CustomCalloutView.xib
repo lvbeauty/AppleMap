@@ -13,13 +13,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="107 Coffee Dessert" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyF-it-qOq">
-                    <rect key="frame" x="8" y="8" width="149" height="29"/>
+                    <rect key="frame" x="8" y="8" width="196" height="29"/>
                     <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="18"/>
                     <color key="textColor" red="0.01536292172" green="0.075540496129999996" blue="0.659601047" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, this is Tina's cafe." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdp-yZ-DQo">
-                    <rect key="frame" x="8" y="37" width="190.33333333333334" height="22"/>
+                    <rect key="frame" x="8" y="37" width="196" height="22"/>
                     <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="17"/>
                     <color key="textColor" red="1" green="0.32486157100000002" blue="0.01796174482" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -31,7 +31,7 @@
                     </constraints>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ES3-1x-rSO">
-                    <rect key="frame" x="8" y="59" width="100" height="21"/>
+                    <rect key="frame" x="8" y="64" width="100" height="16"/>
                     <color key="backgroundColor" red="1" green="0.30231204909999998" blue="0.46591637130000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="t5E-8V-ysO"/>
@@ -44,7 +44,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ge0-Rn-gpw">
-                    <rect key="frame" x="116" y="59" width="100" height="21"/>
+                    <rect key="frame" x="116" y="64" width="100" height="16"/>
                     <color key="backgroundColor" red="1" green="0.30231204909999998" blue="0.46591637130000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="oI7-7k-gg4"/>
@@ -59,6 +59,7 @@
             </subviews>
             <color key="backgroundColor" red="1" green="0.71764705880000002" blue="0.64172426890000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="zPF-dr-eS8" firstAttribute="leading" secondItem="pdp-yZ-DQo" secondAttribute="trailing" constant="16" id="734-38-y16"/>
                 <constraint firstItem="zPF-dr-eS8" firstAttribute="top" secondItem="2X1-Ih-VbZ" secondAttribute="top" constant="8" id="9ei-Bt-oL0"/>
                 <constraint firstItem="ge0-Rn-gpw" firstAttribute="leading" secondItem="ES3-1x-rSO" secondAttribute="trailing" constant="8" id="CSq-Rg-OEh"/>
                 <constraint firstItem="WyF-it-qOq" firstAttribute="top" secondItem="2X1-Ih-VbZ" secondAttribute="top" constant="8" id="F6c-86-cit"/>
@@ -68,8 +69,9 @@
                 <constraint firstItem="ge0-Rn-gpw" firstAttribute="height" secondItem="ES3-1x-rSO" secondAttribute="height" id="Prr-Wj-xo8"/>
                 <constraint firstItem="ge0-Rn-gpw" firstAttribute="centerY" secondItem="ES3-1x-rSO" secondAttribute="centerY" id="Uhm-Rk-28K"/>
                 <constraint firstItem="pdp-yZ-DQo" firstAttribute="top" secondItem="WyF-it-qOq" secondAttribute="bottom" id="XaT-hx-aRu"/>
-                <constraint firstItem="ES3-1x-rSO" firstAttribute="top" secondItem="pdp-yZ-DQo" secondAttribute="bottom" id="ZQI-Zw-lt2"/>
+                <constraint firstItem="ES3-1x-rSO" firstAttribute="top" secondItem="pdp-yZ-DQo" secondAttribute="bottom" constant="5" id="ZQI-Zw-lt2"/>
                 <constraint firstAttribute="bottom" secondItem="ES3-1x-rSO" secondAttribute="bottom" constant="8" id="l9Y-8f-Ziz"/>
+                <constraint firstItem="zPF-dr-eS8" firstAttribute="leading" secondItem="WyF-it-qOq" secondAttribute="trailing" constant="16" id="uJz-LR-v3H"/>
                 <constraint firstAttribute="bottom" secondItem="zPF-dr-eS8" secondAttribute="bottom" constant="8" id="uPW-TG-hB2"/>
                 <constraint firstItem="ES3-1x-rSO" firstAttribute="leading" secondItem="2X1-Ih-VbZ" secondAttribute="leading" constant="8" id="yCe-rh-Lg6"/>
             </constraints>

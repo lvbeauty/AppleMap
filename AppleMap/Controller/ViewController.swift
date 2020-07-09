@@ -31,12 +31,18 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.fetchLocationData()
         setupUI()
         checkAuthorition()
         setupMapKit()
         setupLocationM()
-        remoteDataShowingOnTheMap()
+        setupDataSource()
+    }
+    
+    func setupDataSource()
+    {
+        viewModel.fetchLocationData {
+            self.remoteDataShowingOnTheMap()
+        }
     }
     
     func setupMapKit()
@@ -49,13 +55,6 @@ class ViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .followWithHeading
         
-//        let location = CLLocation(latitude: 25.761681, longitude: -80.191788)
-//
-//        self.centerTo(location: location, regionRadius: 1000)
-//
-//        let annotation: CustomAnnotation = CustomAnnotation(viewModel: CustomCalloutViewModel(title: "107 Coffee Dessert", subtitle: "Tina's cafe, Welcome!!", image: #imageLiteral(resourceName: "house")), coordinate: location.coordinate)
-//
-//        mapView.addAnnotation(annotation)
     }
     
     func setupUI() {
@@ -96,33 +95,32 @@ class ViewController: UIViewController {
     
     func remoteDataShowingOnTheMap()
     {
-        var annotations: [CustomAnnotation] = []
-        
-        let workItem = DispatchWorkItem {
-            for data in self.viewModel.dataSource {
-                var imageData: Data?
-               
-                do {
-                    imageData = try Data(contentsOf: data.imagefile)
-                }
-                catch {
-                    print(error.localizedDescription)
-                }
+//        var annotations: [CustomAnnotation] = []
+        for data in self.viewModel.dataSource {
+            
+            guard let latitude = data.latitude, let longtitude = data.longitude else { return }
+            
+            let geoCoder = CLGeocoder()
+    
+            let location = CLLocation(latitude: Double(latitude)!, longitude: Double(longtitude)!)
+            
+            geoCoder.reverseGeocodeLocation(location) { (clplaceMarks, error) in
+                guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
                 
-                let coordinate = CLLocationCoordinate2D(latitude: Double(data.latitude)!, longitude: Double(data.longitude)!)
-                let image = UIImage(data: imageData!)
-                
-                annotations.append(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator, subtitle: data.location, image: image ?? UIImage(systemName: "photo.fill")!), coordinate: coordinate))
+                guard let address = placeMark.completeAddress else { return }
+            
+//                annotations.append(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator ?? "No title", subtitle: data.locat ?? "No subtitle", image: #imageLiteral(resourceName: "cafe")), coordinate: coordinate))
+                self.mapView.addAnnotation(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator ?? "No title", subtitle: data.locat ?? "No subtitle", image: #imageLiteral(resourceName: "cafe"), at: location.coordinate, address: address), coordinate: location.coordinate))
             }
         }
         
-        DispatchQueue.global(qos: .background).async(execute: workItem)
-        
-        workItem.notify(queue: .main) {
-            for annotation in annotations {
-                self.mapView.addAnnotation(annotation)
-            }
-        }
+//        DispatchQueue.global(qos: .background).async(execute: workItem)
+//
+//        workItem.notify(queue: .main) {
+//            for annotation in annotations {
+//                self.mapView.addAnnotation(annotation)
+//            }
+//        }
     }
     
     func centerTo(location: CLLocation, regionRadius: CLLocationDistance) {
@@ -135,16 +133,16 @@ class ViewController: UIViewController {
         let cameraBoundary = MKMapView.CameraBoundary(coordinateRegion: region)
         self.mapView.setCameraBoundary(cameraBoundary, animated: true)
         
-        let zoom = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 1000)
-        self.mapView.setCameraZoomRange(zoom, animated: true)
+//        let zoom = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 10000000)
+//        self.mapView.setCameraZoomRange(zoom, animated: true)
     }
 }
 
 extension ViewController: CustomCalloutViewModelDelegate {
-    func detailbuttonTapped() {
+    func detailbuttonTapped(_ address: String?) {
         let geoCoder = CLGeocoder()
-        let address = "810 SW 2 Ave, Miami, FL 33174, USA"
-        geoCoder.geocodeAddressString(address) { (clplaceMarks, error) in
+        
+        geoCoder.geocodeAddressString(address!) { (clplaceMarks, error) in
             guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
             
             guard let location = placeMark.location else { return }
@@ -156,15 +154,19 @@ extension ViewController: CustomCalloutViewModelDelegate {
         }
     }
     
-    func addressButtonTapped() {
+    func addressButtonTapped(title: String, _ coordinate: CLLocationCoordinate2D?) {
         let geoCoder = CLGeocoder()
-        let location = CLLocation(latitude: 25.761681, longitude: -80.191788)
+        
+        guard let latitude = coordinate?.latitude, let longitude = coordinate?.longitude else { return }
+        
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        
         geoCoder.reverseGeocodeLocation(location) { (clplaceMarks, error) in
             guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
             
-            guard let address = placeMark.completeAddress else { return }
+            let address = placeMark.completeAddress
             
-            AlertManager.shared.alert(title: "Tina Cafe", message: address, controller: self)
+            AlertManager.shared.alert(title: title, message: address ?? "no address", controller: self)
         }
     }
 }
@@ -311,11 +313,13 @@ extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         guard let location = userLocation.location else { return }
         
-        self.centerTo(location: location, regionRadius: 10000)
+        let honoluluLocation = CLLocation(latitude: 21.282778, longitude: -157.829444)
         
-        let annotation: CustomAnnotation = CustomAnnotation(viewModel: CustomCalloutModel(title: "107 Coffee Dessert", subtitle: "Tina's cafe, Welcome!!", image: #imageLiteral(resourceName: "house")), coordinate: location.coordinate)
+        let annotation: CustomAnnotation = CustomAnnotation(viewModel: CustomCalloutModel(title: "107 Coffee Dessert", subtitle: "Tina's cafe, Welcome!!", image: #imageLiteral(resourceName: "house"), at: location.coordinate, address: "820 SW 2 Ave, Miami, FL 33022, USA"), coordinate: location.coordinate)
+        
+        self.centerTo(location: location, regionRadius: 10000)
      
-//        self.setCamera(positionFor: location, regionRadius: 10000)
+        self.setCamera(positionFor: honoluluLocation, regionRadius: 20000)
 
         mapView.addAnnotation(annotation)
     }
