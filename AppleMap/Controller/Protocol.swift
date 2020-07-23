@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 protocol CustomCalloutViewModelDelegate: class {
-    func detailbuttonTapped(_ address: String?)
+    func coordinateButtonTapped(_ address: String?)
     func addressButtonTapped(title: String, _ coordinate: CLLocationCoordinate2D?)
 }
 

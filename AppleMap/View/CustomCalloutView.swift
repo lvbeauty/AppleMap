@@ -21,7 +21,7 @@ class CustomCalloutView: UIView {
     var address: String?
     
     @IBAction func coordinateButtonTapped(_ sender: UIButton) {
-        delegate?.detailbuttonTapped(address)
+        delegate?.coordinateButtonTapped(address)
     }
     
     @IBAction func addressButtonTapped(_ sender: Any) {

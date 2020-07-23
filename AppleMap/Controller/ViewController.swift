@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Security
 
 class ViewController: UIViewController {
 
@@ -30,6 +31,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        defer { // runs at the last of the func, must put before return
+            print("defer statement")
+        }
         
         setupUI()
         checkAuthorition()
@@ -99,28 +104,17 @@ class ViewController: UIViewController {
         for data in self.viewModel.dataSource {
             
             guard let latitude = data.latitude, let longtitude = data.longitude else { return }
-            
-            let geoCoder = CLGeocoder()
     
             let location = CLLocation(latitude: Double(latitude)!, longitude: Double(longtitude)!)
             
-            geoCoder.reverseGeocodeLocation(location) { (clplaceMarks, error) in
-                guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
+            reverseGeocoderBetweenLocationAndAddress(coordinate: location.coordinate) { (placemark) in
+                let address = placemark?.completeAddress
                 
-                guard let address = placeMark.completeAddress else { return }
-            
-//                annotations.append(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator ?? "No title", subtitle: data.locat ?? "No subtitle", image: #imageLiteral(resourceName: "cafe")), coordinate: coordinate))
-                self.mapView.addAnnotation(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator ?? "No title", subtitle: data.locat ?? "No subtitle", image: #imageLiteral(resourceName: "cafe"), at: location.coordinate, address: address), coordinate: location.coordinate))
+                DispatchQueue.main.async {
+                    self.mapView.addAnnotation(CustomAnnotation(viewModel: CustomCalloutModel(title: data.creator ?? "No title", subtitle: data.locat ?? "No subtitle", image: #imageLiteral(resourceName: "cafe"), at: location.coordinate, address: address ?? "No Address!"), coordinate: location.coordinate))
+                }
             }
         }
-        
-//        DispatchQueue.global(qos: .background).async(execute: workItem)
-//
-//        workItem.notify(queue: .main) {
-//            for annotation in annotations {
-//                self.mapView.addAnnotation(annotation)
-//            }
-//        }
     }
     
     func centerTo(location: CLLocation, regionRadius: CLLocationDistance) {
@@ -139,34 +133,27 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: CustomCalloutViewModelDelegate {
-    func detailbuttonTapped(_ address: String?) {
-        let geoCoder = CLGeocoder()
+    func coordinateButtonTapped(_ address: String?) {
         
-        geoCoder.geocodeAddressString(address!) { (clplaceMarks, error) in
-            guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
+        reverseGeocoderBetweenLocationAndAddress(address: address) { (placeMark) in
+            let coordinate = placeMark?.location?.coordinate
+            let latitude = coordinate?.latitude
+            let longitude = coordinate?.longitude
             
-            guard let location = placeMark.location else { return }
-            
-            let latitude = location.coordinate.latitude
-            let longtitude = location.coordinate.longitude
-            
-            AlertManager.shared.alert(title: "Coordinate", message: "latitude: \(latitude)\nlongtitude: \(longtitude)", controller: self)
+            DispatchQueue.main.async {
+                AlertManager.shared.alert(title: "Coordinate", message: "latitude: \(String(describing: latitude))\nlongtitude: \(String(describing: longitude))", controller: self)
+            }
         }
     }
     
     func addressButtonTapped(title: String, _ coordinate: CLLocationCoordinate2D?) {
-        let geoCoder = CLGeocoder()
         
-        guard let latitude = coordinate?.latitude, let longitude = coordinate?.longitude else { return }
-        
-        let location = CLLocation(latitude: latitude, longitude: longitude)
-        
-        geoCoder.reverseGeocodeLocation(location) { (clplaceMarks, error) in
-            guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
+        reverseGeocoderBetweenLocationAndAddress(coordinate: coordinate) {(placeMark) in
+            let address = placeMark?.completeAddress
             
-            let address = placeMark.completeAddress
-            
-            AlertManager.shared.alert(title: title, message: address ?? "no address", controller: self)
+            DispatchQueue.main.async {
+                AlertManager.shared.alert(title: title, message: address ?? "no address", controller: self)
+            }
         }
     }
 }
@@ -224,10 +211,41 @@ extension ViewController: UISearchBarDelegate {
             print(response.mapItems.count)
             
             for item in response.mapItems {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = item.placemark.coordinate
-                annotation.title = item.name
-                self.mapView.addAnnotation(annotation)
+                let coordinate = item.placemark.coordinate
+                self.reverseGeocoderBetweenLocationAndAddress(coordinate: coordinate) { (placeMark) in
+                    let address = placeMark?.completeAddress
+                        
+                    DispatchQueue.main.async {
+                        let annotation = CustomAnnotation(viewModel: CustomCalloutModel(title: item.name!, subtitle: item.phoneNumber ?? "No Phone Number", image: #imageLiteral(resourceName: "factory"), at: coordinate, address: address ?? "no address"), coordinate: coordinate)
+                        self.mapView.addAnnotation(annotation)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Geocoder Methods
+
+extension ViewController
+{
+    func reverseGeocoderBetweenLocationAndAddress(coordinate: CLLocationCoordinate2D? = nil, address: String? = nil, completeHandler: @escaping (CLPlacemark?) -> ()) {
+        let geoCoder = CLGeocoder()
+        
+        if let coordinate = coordinate {
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            
+            geoCoder.reverseGeocodeLocation(location) { (clplaceMarks, error) in
+                guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
+                
+                completeHandler(placeMark)
+            }
+        }
+        else if let address = address {
+            geoCoder.geocodeAddressString(address) { (clplaceMarks, error) in
+                guard let placeMarks = clplaceMarks, let placeMark = placeMarks.first, error == nil else { return }
+                
+                completeHandler(placeMark)
             }
         }
     }
@@ -297,29 +315,29 @@ extension ViewController: MKMapViewDelegate {
         
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: pinID) as? CustomAnnotationView
         if annotationView == nil {
-            annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: pinID) as CustomAnnotationView
+            annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: pinID)
+            
+            annotationView?.annotation = annotation
+            annotationView?.canShowCallout = false
+            annotationView?.centerOffset = CGPoint(x: 0, y: -annotationView!.bounds.size.height * 0.5)
+            annotationView?.isDraggable = true
+            annotationView?.calloutView = Bundle.main.loadNibNamed("CustomCalloutView", owner: nil, options: nil)!.first as? CustomCalloutView
+            annotationView?.calloutView?.delegate = self
         }
-
-        annotationView?.annotation = annotation
-        annotationView?.canShowCallout = false
-        annotationView?.centerOffset = CGPoint(x: 0, y: -annotationView!.bounds.size.height * 0.5)
-        annotationView?.isDraggable = true
-        annotationView?.calloutView = Bundle.main.loadNibNamed("CustomCalloutView", owner: nil, options: nil)!.first as? CustomCalloutView
-        annotationView?.calloutView?.delegate = self
-
+        
         return annotationView
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         guard let location = userLocation.location else { return }
         
-        let honoluluLocation = CLLocation(latitude: 21.282778, longitude: -157.829444)
+//        let honoluluLocation = CLLocation(latitude: 21.282778, longitude: -157.829444)
         
         let annotation: CustomAnnotation = CustomAnnotation(viewModel: CustomCalloutModel(title: "107 Coffee Dessert", subtitle: "Tina's cafe, Welcome!!", image: #imageLiteral(resourceName: "house"), at: location.coordinate, address: "820 SW 2 Ave, Miami, FL 33022, USA"), coordinate: location.coordinate)
         
         self.centerTo(location: location, regionRadius: 10000)
      
-        self.setCamera(positionFor: honoluluLocation, regionRadius: 20000)
+//        self.setCamera(positionFor: honoluluLocation, regionRadius: 20000)
 
         mapView.addAnnotation(annotation)
     }
